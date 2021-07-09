@@ -1,5 +1,8 @@
 package pl.cezpolska.amodit.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +27,17 @@ import java.security.*;
 import java.util.Arrays;
 import java.util.Base64;
 
+@CrossOrigin
 @RestController
 public class TestController {
 
+    @GetMapping("api/hello")
+    public String helloWorld(){
+        return "HelloWorld";
+    }
+
     @GetMapping("/api/folder/{name}")
-    public ModelAndView createFolder(@PathVariable String name) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public ResponseEntity<String> createFolder(@PathVariable String name) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
         String prefix = "koko";
         String secret = "aa";
@@ -75,11 +84,14 @@ public class TestController {
                 System.out.println(response.toString());
 
             }
+            return new ResponseEntity<>("all good", HttpStatus.OK);
+        }else {
+            return  new ResponseEntity<>("bad request", HttpStatus.BAD_REQUEST);
         }
 
 
 
-        return new ModelAndView("redirect:" + "https://amodit-test.cezpolska.pl/forms/MCaselist.aspx#inbox-proc_0");
+
     }
 
     public static byte[][] GenerateKeyAndIV(int keyLength, int ivLength, int iterations, byte[] salt, byte[] password, MessageDigest md) {
